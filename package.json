@@ -9,5 +9,9 @@
   "license": "ISC",
   "dependencies": {
     "vite-plugin-dts": "^3.3.1"
+  },
+  "scripts": {
+    "start": "cd tweeter-web && npm run start",
+    "build": "cd tweeter-web && npm run build && cd ../tweeter-shared && npm run build"
   }
 }
