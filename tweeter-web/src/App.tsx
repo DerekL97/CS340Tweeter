@@ -12,9 +12,8 @@ import Login from "./components/authentication/login/Login";
 import Register from "./components/authentication/register/Register";
 import MainLayout from "./components/mainLayout/MainLayout";
 import Toaster from "./components/toaster/Toaster";
-import FeedScroller from "./components/mainLayout/FeedScroller";
-import StoryScroller from "./components/mainLayout/StoryScroller";
-import { AuthToken, User, FakeData } from "tweeter-shared";
+import StatusItemScroller from "./components/mainLayout/StatusItemScroller";
+import { AuthToken, User, FakeData, Status } from "tweeter-shared";
 import UserItemScroller from "./components/mainLayout/UserItemScroller";
 
 const App = () => {
@@ -63,8 +62,28 @@ const AuthenticatedRoutes = () => {
     <Routes>
       <Route element={<MainLayout />}>
         <Route index element={<Navigate to="/feed" />} />
-        <Route path="feed" element={<FeedScroller />} />
-        <Route path="story" element={<StoryScroller />} />
+        <Route
+          path="feed"
+          element={
+            <StatusItemScroller
+              itemDescription="feed"
+              loadMoreStatusItems={async (authToken: AuthToken, user: User, pageSize: number, lastItem: Status | null) => {
+                return await FakeData.instance.getPageOfStatuses(lastItem, pageSize);
+              }}
+            />
+          }
+        />
+        <Route
+          path="story"
+          element={
+            <StatusItemScroller
+              itemDescription="story"
+              loadMoreStatusItems={async (authToken: AuthToken, user: User, pageSize: number, lastItem: Status | null) => {
+                return await FakeData.instance.getPageOfStatuses(lastItem, pageSize);
+              }}
+            />
+          }
+        />
         <Route
           path="following"
           element={
