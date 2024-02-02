@@ -1,5 +1,5 @@
 import useToastListener from "../toaster/ToastListenerHook";
-import OAuthOptions from "./AuthenticationFields";
+import OAuthOptions from "./OAuthOptions";
 
 interface Props {
   headingText: string;
