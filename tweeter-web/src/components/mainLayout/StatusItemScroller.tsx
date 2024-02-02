@@ -34,7 +34,7 @@ const StatusItemScroller = (props: Props) => {
   const addItems = (newItems: Status[]) =>
     setItems([...itemsReference.current, ...newItems]);
 
-  const { displayedUser, setDisplayedUser, currentUser, authToken } =
+  const { displayedUser, authToken } =
     useContext(UserInfoContext);
 
   // Load initial items
