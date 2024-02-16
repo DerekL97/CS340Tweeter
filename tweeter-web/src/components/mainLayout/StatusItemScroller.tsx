@@ -1,74 +1,47 @@
-import { AuthToken, Status, User } from "tweeter-shared";
+import { Status } from "tweeter-shared";
 import { useState, useRef, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import StatusItem from "../statusItem/StatusItem";
 import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfoContext from "../userInfo/useUserInfoContext";
+import { StatusItemPresenter, StatusItemView } from "../../presenter/StatusItemPresenter";
 
-export const PAGE_SIZE = 10;
 
 interface Props {
-  loadMoreStatusItems: (
-    authToken: AuthToken,
-    user: User,
-    pageSize: number,
-    lastItem: Status | null
-  ) => Promise<[Status[], boolean]>;
-  itemDescription: string;
+  presenterGenerator: (view: StatusItemView) => StatusItemPresenter;
 }
 
 const StatusItemScroller = (props: Props) => {
   const { displayErrorMessage } = useToastListener();
   const [items, setItems] = useState<Status[]>([]);
-  const [hasMoreItems, setHasMoreItems] = useState(true);
-  const [lastItem, setLastItem] = useState<Status | null>(null);
 
   // Required to allow the addItems method to see the current value of 'items'
   // instead of the value from when the closure was created.
   const itemsReference = useRef(items);
   itemsReference.current = items;
 
-  const addItems = (newItems: Status[]) =>
-    setItems([...itemsReference.current, ...newItems]);
+  const listener: StatusItemView = {
+    addItems: (newItems: Status[]) =>
+      setItems([...itemsReference.current, ...newItems]),
+    displayErrorMessage: (message: string) => {
+      displayErrorMessage(message);
+    }
+  }
 
-  const { displayedUser, authToken } =
-    useUserInfoContext();
+
+  const [presenter] = useState(props.presenterGenerator(listener));
+
+  const { displayedUser, authToken } = useUserInfoContext();
+
+  const loadMoreItems = async () => {
+    presenter.loadMoreItems(authToken!, displayedUser!);
+  };
 
   // Load initial items
   useEffect(() => {
     loadMoreItems();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const loadMoreItems = async () => {
-    try {
-      if (hasMoreItems) {
-        let [newItems, hasMore] = await props.loadMoreStatusItems(
-          authToken!,
-          displayedUser!,
-          PAGE_SIZE,
-          lastItem
-        );
-
-        setHasMoreItems(hasMore);
-        setLastItem(newItems[newItems.length - 1]);
-        addItems(newItems);
-      }
-    } catch (error) {
-      displayErrorMessage(
-        `Failed to load ${props.itemDescription} items because of exception: ${error}`
-      );
-    }
-  };
-  
-  // const loadMoreStatusItems = async (
-  //   authToken: AuthToken,
-  //   user: User,
-  //   pageSize: number,
-  //   lastItem: Status | null
-  // ): Promise<[Status[], boolean]> => {
-  //   // TODO: Replace with the result of calling server
-  //   return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
-  // };
+  },
+    []);
 
 
 
@@ -78,7 +51,7 @@ const StatusItemScroller = (props: Props) => {
         className="pr-0 mr-0"
         dataLength={items.length}
         next={loadMoreItems}
-        hasMore={hasMoreItems}
+        hasMore={presenter.hasMoreItems}
         loader={<h4>Loading...</h4>}
       >
         {items.map((item, index) => (

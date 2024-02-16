@@ -11,12 +11,15 @@ import Register from "./components/authentication/register/Register";
 import MainLayout from "./components/mainLayout/MainLayout";
 import Toaster from "./components/toaster/Toaster";
 import StatusItemScroller from "./components/mainLayout/StatusItemScroller";
-import { AuthToken, User, FakeData, Status } from "tweeter-shared";
+import { AuthToken, User, Status } from "tweeter-shared";
 import UserItemScroller from "./components/mainLayout/UserItemScroller";
 import useUserInfoContext from "./components/userInfo/useUserInfoContext";
 import { UserItemView } from "./presenter/UserItemPresenter";
 import { FollowingPresenter } from "./presenter/FollowingPresenter";
 import { FollowersPresenter } from "./presenter/FollowersPresenter";
+import { StatusItemPresenter, StatusItemView } from "./presenter/StatusItemPresenter";
+import { FeedPresenter } from "./presenter/FeedPresenter";
+import { StoryPresenter } from "./presenter/StoryPresenter";
 
 const App = () => {
   const { currentUser, authToken } = useUserInfoContext();
@@ -49,10 +52,7 @@ const AuthenticatedRoutes = () => {
           path="feed"
           element={
             <StatusItemScroller
-              itemDescription="feed"
-              loadMoreStatusItems={async (authToken: AuthToken, user: User, pageSize: number, lastItem: Status | null) => {
-                return await FakeData.instance.getPageOfStatuses(lastItem, pageSize);
-              }}
+              presenterGenerator={(view: StatusItemView) => new FeedPresenter(view)}
             />
           }
         />
@@ -60,10 +60,7 @@ const AuthenticatedRoutes = () => {
           path="story"
           element={
             <StatusItemScroller
-              itemDescription="story"
-              loadMoreStatusItems={async (authToken: AuthToken, user: User, pageSize: number, lastItem: Status | null) => {
-                return await FakeData.instance.getPageOfStatuses(lastItem, pageSize);
-              }}
+              presenterGenerator={(view: StatusItemView) => new StoryPresenter(view)}
             />
           }
         />
