@@ -4,7 +4,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import UserItem from "../userItem/UserItem";
 import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfoContext from "../userInfo/useUserInfoContext";
-import { UserItemPresenter, UserItemView } from "../../presenter/UserItemPresenter";
+import { UserItemPresenter, UserItemView } from "../../presenter/UserPresenters/UserItemPresenter";
 
 // export const PAGE_SIZE = 10;
 
