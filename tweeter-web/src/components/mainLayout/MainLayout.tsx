@@ -3,17 +3,23 @@ import { Outlet } from "react-router-dom";
 import AppNavbar from "../appNavbar/AppNavbar";
 import PostStatus from "../postStatus/PostStatus";
 import UserInfo from "../userInfo/UserInfo";
+import { UserInfoPresenter } from "../../presenter/UserPresenters/UserInfoPresenter";
+import { NavBarPresenter } from "../../presenter/NavBarPresenter";
 
 const MainLayout = () => {
   return (
     <>
-      <AppNavbar />
+      <AppNavbar 
+        generatePresenter={(view) => new NavBarPresenter(view)}
+      />
       <div className="container mx-auto px-3 w-100">
         <div className="row gx-4">
           <div className="col-4">
             <div className="row gy-4">
               <div className="p-3 mb-4 border rounded bg-light">
-                <UserInfo />
+                <UserInfo 
+                  generatePresenter={(view) => new UserInfoPresenter(view)}
+                />
               </div>
               <div className="p-3 border mt-1 rounded bg-light">
                 <PostStatus />

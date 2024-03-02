@@ -11,12 +11,18 @@ import Register from "./components/authentication/register/Register";
 import MainLayout from "./components/mainLayout/MainLayout";
 import Toaster from "./components/toaster/Toaster";
 import StatusItemScroller from "./components/mainLayout/StatusItemScroller";
-import { AuthToken, User, FakeData, Status } from "tweeter-shared";
 import UserItemScroller from "./components/mainLayout/UserItemScroller";
 import useUserInfoContext from "./components/userInfo/useUserInfoContext";
-import { UserItemView } from "./presenter/UserItemPresenter";
-import { FollowingPresenter } from "./presenter/FollowingPresenter";
-import { FollowersPresenter } from "./presenter/FollowersPresenter";
+import { FollowingPresenter } from "./presenter/UserPresenters/FollowingPresenter";
+import { FollowersPresenter } from "./presenter/UserPresenters/FollowersPresenter";
+import { FeedPresenter } from "./presenter/StatusPresenters/FeedPresenter";
+import { StoryPresenter } from "./presenter/StatusPresenters/StoryPresenter";
+import { LoginPresenter, LoginView } from "./presenter/AuthPresenters/LoginPresenter";
+import { RegisterPresenter, RegisterView } from "./presenter/AuthPresenters/RegisterPresenter";
+import { StatusService } from "./model/service/StatusService";
+import { FollowService } from "./model/service/FollowService";
+import { ListView } from "./presenter/ListPresenter";
+import { Status, User } from "tweeter-shared";
 
 const App = () => {
   const { currentUser, authToken } = useUserInfoContext();
@@ -49,10 +55,7 @@ const AuthenticatedRoutes = () => {
           path="feed"
           element={
             <StatusItemScroller
-              itemDescription="feed"
-              loadMoreStatusItems={async (authToken: AuthToken, user: User, pageSize: number, lastItem: Status | null) => {
-                return await FakeData.instance.getPageOfStatuses(lastItem, pageSize);
-              }}
+              presenterGenerator={(view: ListView<Status>) => new FeedPresenter(view, new StatusService())}
             />
           }
         />
@@ -60,10 +63,7 @@ const AuthenticatedRoutes = () => {
           path="story"
           element={
             <StatusItemScroller
-              itemDescription="story"
-              loadMoreStatusItems={async (authToken: AuthToken, user: User, pageSize: number, lastItem: Status | null) => {
-                return await FakeData.instance.getPageOfStatuses(lastItem, pageSize);
-              }}
+              presenterGenerator={(view: ListView<Status>) => new StoryPresenter(view, new StatusService())}
             />
           }
         />
@@ -71,7 +71,7 @@ const AuthenticatedRoutes = () => {
           path="following"
           element={
             <UserItemScroller
-              presenterGenerator={(view: UserItemView) => new FollowingPresenter(view)}
+              presenterGenerator={(view: ListView<User>) => new FollowingPresenter(view, new FollowService())}
             />
           }
         />
@@ -79,7 +79,7 @@ const AuthenticatedRoutes = () => {
           path="followers"
           element={
             <UserItemScroller
-              presenterGenerator={(view: UserItemView) => new FollowersPresenter(view)}
+              presenterGenerator={(view: ListView<User>) => new FollowersPresenter(view, new FollowService())}
             />
           }
         />
@@ -95,9 +95,16 @@ const UnauthenticatedRoutes = () => {
 
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="*" element={<Login originalUrl={location.pathname} />} />
+      <Route path="/login" element={<Login
+        generatePresenter={(view: LoginView) => new LoginPresenter(view)}
+      />} />
+
+      <Route path="/register" element={<Register
+        generatePresenter={(view: RegisterView) => new RegisterPresenter(view)}
+      />} />
+      <Route path="*" element={<Login
+        generatePresenter={(view: LoginView) => new LoginPresenter(view, location.pathname)}
+      />} />
     </Routes>
   );
 };
