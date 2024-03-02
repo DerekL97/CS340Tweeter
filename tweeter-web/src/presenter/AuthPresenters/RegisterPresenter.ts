@@ -1,18 +1,13 @@
 import { AuthToken, User } from "tweeter-shared";
 import { UserService } from "../../model/service/UserService";
-
-export interface RegisterView {
-    displayErrorMessage(message: string): void;
-    navigateTo(url: string): void;
-    updateUserInfo(user: User, authToken: AuthToken): void;
-}
+import { ViewWithNavigate } from "../ViewInterface";
 
 export class RegisterPresenter {
 
-    protected view: RegisterView;
+    protected view: ViewWithNavigate;
     protected userService: UserService = new UserService();
 
-    constructor(view: RegisterView) {
+    constructor(view: ViewWithNavigate) {
         this.view = view;
     }
 

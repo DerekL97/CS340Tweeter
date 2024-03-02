@@ -1,11 +1,9 @@
 import { AuthToken, User } from "tweeter-shared";
 import { UserService } from "../model/service/UserService";
+import { ViewWithInfoMessage } from "./ViewInterface";
 
 
-export interface NavBarView {
-    displayErrorMessage: (message: string) => void;
-    displayInfoMessage: (message: string, duration: number) => void;
-    clearLastInfoMessage: () => void;
+export interface NavBarView extends ViewWithInfoMessage {
     clearUserInfo: () => void;
 }
 

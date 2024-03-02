@@ -1,22 +1,13 @@
-// LoginPresenter.tsx
-// import { AuthToken, FakeData, User } from "tweeter-shared";
 import { AuthToken, User } from "tweeter-shared";
 import { UserService } from "../../model/service/UserService";
-
-export interface LoginView {
-    displayErrorMessage(message: string): void;
-    navigateTo(url: string): void;
-    updateUserInfo(user: User, authToken: AuthToken): void;
-}
+import { ViewWithNavigate } from "../ViewInterface";
 
 export class LoginPresenter {
-    // create a userService: UserService
-    // create a view: LoginView
-    protected view: LoginView;
+    protected view: ViewWithNavigate;
     protected userService: UserService = new UserService();
     protected originalUrl: string | undefined;
 
-    constructor(view: LoginView, originalUrl?: string) {
+    constructor(view: ViewWithNavigate, originalUrl?: string) {
         this.view = view;
         this.originalUrl = originalUrl;
     }

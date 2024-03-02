@@ -1,8 +1,8 @@
 import { AuthToken, User } from "tweeter-shared";
+import { ViewInterface } from "./ViewInterface";
 
-export interface ListView<T> {
+export interface ListView<T> extends ViewInterface {
     addItems: (items: T[]) => void;
-    displayErrorMessage: (message: string) => void;
 }
 
 export const PAGE_SIZE = 10;
