@@ -13,14 +13,16 @@ import Toaster from "./components/toaster/Toaster";
 import StatusItemScroller from "./components/mainLayout/StatusItemScroller";
 import UserItemScroller from "./components/mainLayout/UserItemScroller";
 import useUserInfoContext from "./components/userInfo/useUserInfoContext";
-import { UserItemView } from "./presenter/UserPresenters/UserItemPresenter";
 import { FollowingPresenter } from "./presenter/UserPresenters/FollowingPresenter";
 import { FollowersPresenter } from "./presenter/UserPresenters/FollowersPresenter";
-import { StatusItemView } from "./presenter/StatusPresenters/StatusItemPresenter";
 import { FeedPresenter } from "./presenter/StatusPresenters/FeedPresenter";
 import { StoryPresenter } from "./presenter/StatusPresenters/StoryPresenter";
 import { LoginPresenter, LoginView } from "./presenter/AuthPresenters/LoginPresenter";
 import { RegisterPresenter, RegisterView } from "./presenter/AuthPresenters/RegisterPresenter";
+import { StatusService } from "./model/service/StatusService";
+import { FollowService } from "./model/service/FollowService";
+import { ListView } from "./presenter/ListPresenter";
+import { Status, User } from "tweeter-shared";
 
 const App = () => {
   const { currentUser, authToken } = useUserInfoContext();
@@ -53,7 +55,7 @@ const AuthenticatedRoutes = () => {
           path="feed"
           element={
             <StatusItemScroller
-              presenterGenerator={(view: StatusItemView) => new FeedPresenter(view)}
+              presenterGenerator={(view: ListView<Status>) => new FeedPresenter(view, new StatusService())}
             />
           }
         />
@@ -61,7 +63,7 @@ const AuthenticatedRoutes = () => {
           path="story"
           element={
             <StatusItemScroller
-              presenterGenerator={(view: StatusItemView) => new StoryPresenter(view)}
+              presenterGenerator={(view: ListView<Status>) => new StoryPresenter(view, new StatusService())}
             />
           }
         />
@@ -69,7 +71,7 @@ const AuthenticatedRoutes = () => {
           path="following"
           element={
             <UserItemScroller
-              presenterGenerator={(view: UserItemView) => new FollowingPresenter(view)}
+              presenterGenerator={(view: ListView<User>) => new FollowingPresenter(view, new FollowService())}
             />
           }
         />
@@ -77,7 +79,7 @@ const AuthenticatedRoutes = () => {
           path="followers"
           element={
             <UserItemScroller
-              presenterGenerator={(view: UserItemView) => new FollowersPresenter(view)}
+              presenterGenerator={(view: ListView<User>) => new FollowersPresenter(view, new FollowService())}
             />
           }
         />

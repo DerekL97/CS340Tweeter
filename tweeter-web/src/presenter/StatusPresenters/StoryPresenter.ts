@@ -1,20 +1,20 @@
-import { AuthToken, User } from "tweeter-shared";
-import { StatusItemPresenter } from "./StatusItemPresenter";
-export const PAGE_SIZE = 10;
+import { AuthToken, Status, User } from "tweeter-shared";
+import { ListPresenter, PAGE_SIZE } from "../ListPresenter";
+import { StatusService } from "../../model/service/StatusService";
 
-export class StoryPresenter extends StatusItemPresenter{
-    public async loadMoreItems (authToken: AuthToken, displayedUser: User) {
+export class StoryPresenter extends ListPresenter<Status, StatusService>{
+    public async loadMoreItems(authToken: AuthToken, displayedUser: User) {
         try {
             if (this.hasMoreItems) {
-                let [newItems, hasMore] = await this.service.loadMoreStory(
+                let [newItems, hasMore] = await this._service.loadMoreStory(
                     authToken!,
                     displayedUser!,
                     PAGE_SIZE,
-                    this.lastItem
+                    this._lastItem
                 );
 
                 this._hasMoreItems = hasMore;
-                this.lastItem = newItems[newItems.length - 1];
+                this._lastItem = newItems[newItems.length - 1];
                 this._view.addItems(newItems);
             }
         } catch (error) {

@@ -1,38 +1,25 @@
 import { AuthToken, User } from "tweeter-shared";
 import { FollowService } from "../../model/service/FollowService";
-import { UserItemPresenter, UserItemView } from "./UserItemPresenter";
-
-export const PAGE_SIZE = 10;
+import { ListPresenter, PAGE_SIZE } from "../ListPresenter";
 
 
-export class FollowersPresenter extends UserItemPresenter {
-    // private view: FollowingView;
-    private lastItem: User | null = null;
-    private service: FollowService;
-  
+export class FollowersPresenter extends ListPresenter<User, FollowService> {
 
-    public constructor(view: UserItemView) {
-        super(view);
-        this.service = new FollowService();
+  public async loadMoreItems(authToken: AuthToken, user: User) {
+    try {
+      if (this.hasMoreItems) {
+
+        let [newItems, hasMore] = await this._service.loadMoreFollowers(authToken, user, PAGE_SIZE, this._lastItem);
+
+        this.hasMoreItems = hasMore;
+        this._lastItem = newItems[newItems.length - 1];
+        this.view.addItems(newItems);
+      }
+    } catch (error) {
+      this.view.displayErrorMessage(
+        `Failed to load follower because of exception: ${error}`
+      );
     }
+  };
 
-
-
-    public async loadMoreItems(authToken: AuthToken, user: User) {
-        try {
-          if (this.hasMoreItems) {
-
-            let [newItems, hasMore] = await this.service.loadMoreFollowers(authToken, user, PAGE_SIZE, this.lastItem);
-    
-            this.hasMoreItems = hasMore;
-            this.lastItem = newItems[newItems.length - 1];
-            this.view.addItems(newItems);
-          }
-        } catch (error) {
-          this.view.displayErrorMessage(
-            `Failed to load follower because of exception: ${error}`
-          );
-        }
-      };
-    
 }
