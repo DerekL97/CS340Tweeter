@@ -1,14 +1,13 @@
 import { UserService } from "../../model/service/UserService";
 import { ViewWithNavigate } from "../ViewInterface";
 import { Presenter } from "../Presenter";
+import { AuthPresenter } from "./AuthPresenter";
 
-export class LoginPresenter extends Presenter<ViewWithNavigate> {
-    protected userService: UserService;
+export class LoginPresenter extends AuthPresenter {
     protected originalUrl: string | undefined;
 
     constructor(view: ViewWithNavigate, originalUrl?: string) {
         super(view);
-        this.userService = new UserService();
         this.originalUrl = originalUrl;
     }
 

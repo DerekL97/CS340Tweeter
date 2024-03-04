@@ -1,15 +1,9 @@
 import { UserService } from "../../model/service/UserService";
 import { Presenter } from "../Presenter";
 import { ViewWithNavigate } from "../ViewInterface";
+import { AuthPresenter } from "./AuthPresenter";
 
-export class RegisterPresenter extends Presenter<ViewWithNavigate> {
-
-    protected userService: UserService;
-
-    constructor(view: ViewWithNavigate) {
-        super(view);
-        this.userService = new UserService();
-    }
+export class RegisterPresenter extends AuthPresenter {
 
     public async doRegister(firstName: string,
         lastName: string,
