@@ -1,5 +1,6 @@
 import { AuthToken, User } from "tweeter-shared";
 import { ViewInterface } from "./ViewInterface";
+import { Presenter } from "./Presenter";
 
 export interface ListView<T> extends ViewInterface {
     addItems: (items: T[]) => void;
@@ -7,14 +8,13 @@ export interface ListView<T> extends ViewInterface {
 
 export const PAGE_SIZE = 10;
 
-export abstract class ListPresenter<T, S> {
-    protected _view: ListView<T>;
+export abstract class ListPresenter<T, S> extends Presenter<ListView<T>> {
     protected _hasMoreItems = true;
     protected _lastItem: T | null = null;
     protected _service: S;
 
     public constructor(view: ListView<T>, service: S) {
-        this._view = view;
+        super(view);
         this._hasMoreItems = true;
         this._lastItem = null;
         this._service = service;

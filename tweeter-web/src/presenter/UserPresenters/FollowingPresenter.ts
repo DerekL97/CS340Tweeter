@@ -6,7 +6,7 @@ import { ListPresenter, ListView, PAGE_SIZE } from "../ListPresenter";
 export class FollowingPresenter extends ListPresenter<User, FollowService> {
 
   public async loadMoreItems(authToken: AuthToken, user: User) {
-    try {
+    await this.wrapFunction(async () => {
       if (this.hasMoreItems) {
 
         let [newItems, hasMore] = await this._service.loadMoreFollowees(authToken, user, PAGE_SIZE, this._lastItem);
@@ -15,11 +15,8 @@ export class FollowingPresenter extends ListPresenter<User, FollowService> {
         this._lastItem = newItems[newItems.length - 1];
         this.view.addItems(newItems);
       }
-    } catch (error) {
-      this.view.displayErrorMessage(
-        `Failed to load followee because of exception: ${error}`
-      );
-    }
+
+    }, "load followee");
   };
 
 }

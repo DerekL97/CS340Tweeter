@@ -17,8 +17,8 @@ import { FollowingPresenter } from "./presenter/UserPresenters/FollowingPresente
 import { FollowersPresenter } from "./presenter/UserPresenters/FollowersPresenter";
 import { FeedPresenter } from "./presenter/StatusPresenters/FeedPresenter";
 import { StoryPresenter } from "./presenter/StatusPresenters/StoryPresenter";
-import { LoginPresenter, LoginView } from "./presenter/AuthPresenters/LoginPresenter";
-import { RegisterPresenter, RegisterView } from "./presenter/AuthPresenters/RegisterPresenter";
+import { LoginPresenter } from "./presenter/AuthPresenters/LoginPresenter";
+import { RegisterPresenter } from "./presenter/AuthPresenters/RegisterPresenter";
 import { StatusService } from "./model/service/StatusService";
 import { FollowService } from "./model/service/FollowService";
 import { ListView } from "./presenter/ListPresenter";

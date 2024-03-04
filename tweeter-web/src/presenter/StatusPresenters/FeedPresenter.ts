@@ -5,9 +5,9 @@ import { StatusService } from "../../model/service/StatusService";
 
 export class FeedPresenter extends ListPresenter<Status, StatusService> {
 
-
     public async loadMoreItems(authToken: AuthToken, displayedUser: User) {
-        try {
+        await this.wrapFunction(async () => {
+            
             if (this.hasMoreItems) {
                 let [newItems, hasMore] = await this._service.loadMoreFeed(
                     authToken!,
@@ -20,11 +20,9 @@ export class FeedPresenter extends ListPresenter<Status, StatusService> {
                 this._lastItem = newItems[newItems.length - 1];
                 this._view.addItems(newItems);
             }
-        } catch (error) {
-            this._view.displayErrorMessage(
-                `Failed to load feed items because of exception: ${error}`
-            );
-        }
+
+        }, "load feed items")
+
     };
 
 

@@ -1,24 +1,23 @@
-import { AuthToken, User } from "tweeter-shared";
 import { UserService } from "../../model/service/UserService";
+import { Presenter } from "../Presenter";
 import { ViewWithNavigate } from "../ViewInterface";
 
-export class RegisterPresenter {
+export class RegisterPresenter extends Presenter<ViewWithNavigate> {
 
-    protected view: ViewWithNavigate;
-    protected userService: UserService = new UserService();
+    protected userService: UserService;
 
     constructor(view: ViewWithNavigate) {
-        this.view = view;
+        super(view);
+        this.userService = new UserService();
     }
-
-
 
     public async doRegister(firstName: string,
         lastName: string,
         alias: string,
         password: string,
         imageBytes: Uint8Array): Promise<void> {
-        try {
+
+        await this.wrapFunction(async () => {
             let [user, authToken] = await this.userService.register(
                 firstName,
                 lastName,
@@ -27,14 +26,10 @@ export class RegisterPresenter {
                 imageBytes
             );
 
-            this.view.updateUserInfo(user, authToken);
-            this.view.navigateTo("/");
-        } catch (error) {
-            this.view.displayErrorMessage(
-                `Failed to register user because of exception: ${error}`
-            );
-        }
+            this._view.updateUserInfo(user, authToken);
+            this._view.navigateTo("/");
+        },
+            "register user")
     }
-
 
 }
