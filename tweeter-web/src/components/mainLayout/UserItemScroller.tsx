@@ -4,68 +4,31 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import UserItem from "../userItem/UserItem";
 import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfoContext from "../userInfo/useUserInfoContext";
-import { UserItemPresenter, UserItemView } from "../../presenter/UserPresenters/UserItemPresenter";
+import { ListPresenter, ListView } from "../../presenter/ListPresenter";
+import { FollowersPresenter } from "../../presenter/UserPresenters/FollowersPresenter";
+import ItemScroller from "./Scroller";
 
 // export const PAGE_SIZE = 10;
 
 interface Props {
-  presenterGenerator: (view: UserItemView) => UserItemPresenter;
+  presenterGenerator: (view: ListView<User>) => ListPresenter<User, FollowersPresenter>;
 }
 
 const UserItemScroller = (props: Props) => {
-  const { displayErrorMessage } = useToastListener();
-  const [items, setItems] = useState<User[]>([]);
-
-  // Required to allow the addItems method to see the current value of 'items'
-  // instead of the value from when the closure was created.
-  const itemsReference = useRef(items);
-  itemsReference.current = items;
-
-  // const addItems = (newItems: User[]) =>
-  //   setItems([...itemsReference.current, ...newItems]);
-
-  const { displayedUser, authToken } = useUserInfoContext();
-
-  // Load initial items
-  useEffect(() => {
-    loadMoreItems();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const listener: UserItemView = {
-    addItems: (newItems: User[]) =>
-      setItems([...itemsReference.current, ...newItems]),
-    displayErrorMessage: (message: string) => {
-      displayErrorMessage(message);
-    }
-  }
-
-  const [presenter] = useState(props.presenterGenerator(listener));
-
-  const loadMoreItems = async () => {
-    presenter.loadMoreItems(authToken!, displayedUser!);
-  };
-
   return (
-    <div className="container px-0 overflow-visible vh-100">
-      <InfiniteScroll
-        className="pr-0 mr-0"
-        dataLength={items.length}
-        next={loadMoreItems}
-        hasMore={presenter.hasMoreItems}
-        loader={<h4>Loading...</h4>}
-      >
-        {items.map((item, index) => (
-          <div
-            key={index}
-            className="row mb-3 mx-0 px-0 border rounded bg-white"
-          >
+    <ItemScroller
+      presenterGenerator={props.presenterGenerator}
+      renderItem={(item, index) => (
+        <div
+          key={index}
+          className="row mb-3 mx-0 px-0 border rounded bg-white"
+        >
+          <div className="col">
             <UserItem value={item} />
           </div>
-        ))}
-      </InfiniteScroll>
-    </div>
-  );
-};
+        </div>
+      )}
+    />
+  );};
 
 export default UserItemScroller;
