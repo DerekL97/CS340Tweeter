@@ -4,17 +4,22 @@ import { ViewWithInfoMessage } from "./ViewInterface";
 import { Presenter } from "./Presenter";
 
 
-export interface NavBarView extends ViewWithInfoMessage {
+export interface AppNavBarPresenterView extends ViewWithInfoMessage {
     clearUserInfo: () => void;
+    navigateToLoginPage: () => void;
 }
 
-export class NavBarPresenter extends Presenter<NavBarView> {
+export class AppNavBarPresenter extends Presenter<AppNavBarPresenterView> {
 
-    protected service: UserService;
+    protected _service: UserService;
 
-    public constructor(view: NavBarView) {
+    public constructor(view: AppNavBarPresenterView) {
         super(view);
-        this.service = new UserService();
+        this._service = new UserService();
+    }
+
+    public get service() {
+        return this._service;
     }
 
     public async logOut(authToken: AuthToken | null) {
@@ -23,6 +28,7 @@ export class NavBarPresenter extends Presenter<NavBarView> {
             await this.service.logout(authToken!);
             this._view.clearLastInfoMessage();
             this._view.clearUserInfo();
+            this._view.navigateToLoginPage();
         },
             "log user out")
     };

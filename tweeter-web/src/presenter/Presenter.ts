@@ -7,12 +7,12 @@ export abstract class Presenter<T extends ViewInterface> {
         this._view = view;
     }
 
-    protected wrapFunction(func: (...args: any[]) => void, message: string) {
+    protected async wrapFunction(func: (...args: any[]) => void, message: string) {
         try {
-            func();
+            await func();
         } catch (error) {
             this._view.displayErrorMessage(
-                `Failed to ${message} because of exception: ${error}`
+                `Failed to ${message} because of exception: ${(error as Error).message}`
             );
         }
     }

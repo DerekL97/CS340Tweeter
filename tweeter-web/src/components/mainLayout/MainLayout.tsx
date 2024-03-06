@@ -4,13 +4,13 @@ import AppNavbar from "../appNavbar/AppNavbar";
 import PostStatus from "../postStatus/PostStatus";
 import UserInfo from "../userInfo/UserInfo";
 import { UserInfoPresenter } from "../../presenter/UserPresenters/UserInfoPresenter";
-import { NavBarPresenter } from "../../presenter/NavBarPresenter";
+import { AppNavBarPresenter } from "../../presenter/AppNavBarPresenter";
 
 const MainLayout = () => {
   return (
     <>
       <AppNavbar 
-        generatePresenter={(view) => new NavBarPresenter(view)}
+        generatePresenter={(view) => new AppNavBarPresenter(view)}
       />
       <div className="container mx-auto px-3 w-100">
         <div className="row gx-4">

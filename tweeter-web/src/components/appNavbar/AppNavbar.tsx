@@ -2,14 +2,13 @@ import "./AppNavbar.css";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { NavLink, useLocation } from "react-router-dom";
 import Image from "react-bootstrap/Image";
-import { AuthToken } from "tweeter-shared";
 import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfoContext from "../userInfo/useUserInfoContext";
-import { NavBarPresenter, NavBarView } from "../../presenter/NavBarPresenter";
+import { AppNavBarPresenter, AppNavBarPresenterView } from "../../presenter/AppNavBarPresenter";
 import { useState } from "react";
 
 interface Props {
-  generatePresenter: (view: NavBarView) => NavBarPresenter;
+  generatePresenter: (view: AppNavBarPresenterView) => AppNavBarPresenter;
 }
 
 const AppNavbar = (props: Props) => {
@@ -18,14 +17,19 @@ const AppNavbar = (props: Props) => {
   const { displayInfoMessage, displayErrorMessage, clearLastInfoMessage } =
     useToastListener();
 
-  const view: NavBarView = {
+  const navigateToLogin = () => {
+    window.location.href = "/login";
+  }
+  const view: AppNavBarPresenterView = {
     displayErrorMessage: displayErrorMessage,
     displayInfoMessage: displayInfoMessage,
     clearLastInfoMessage: clearLastInfoMessage,
     clearUserInfo: clearUserInfo,
+    navigateToLoginPage: navigateToLogin
   };
-  
+
   const [presenter] = useState(props.generatePresenter(view));
+
 
 
   const logOut = async (event: React.MouseEvent) => {
@@ -73,9 +77,9 @@ const AppNavbar = (props: Props) => {
               <NavLink to="/followers">Followers</NavLink>
             </Nav.Item>
             <Nav.Item>
-              <NavLink id="logout" onClick={logOut} to={location.pathname}>
+              <a id="logout" href="#" onClick={logOut}>
                 Logout
-              </NavLink>
+              </a>
             </Nav.Item>
           </Nav>
         </Navbar.Collapse>
