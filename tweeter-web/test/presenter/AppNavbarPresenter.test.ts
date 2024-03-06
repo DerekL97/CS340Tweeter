@@ -43,7 +43,7 @@ describe("AppNavbarPresenter", () => {
 
     })
 
-    it("When logout fails, tells view to display an error message", async () => {
+    it("tells view to display an error message when logout fails", async () => {
         const error = new Error("Error logging out");
         when(mockUserService.logout(authToken)).thenThrow(error);
 
