@@ -7,11 +7,11 @@ import { AuthToken, User } from "tweeter-shared";
 import useToastListener from "../../toaster/ToastListenerHook";
 import AuthenticationFields from "../AuthenticationFields";
 import useUserInfoContext from "../../userInfo/useUserInfoContext";
-import { LoginPresenter, LoginView } from "../../../presenter/AuthPresenters/LoginPresenter";
+import { LoginPresenter } from "../../../presenter/AuthPresenters/LoginPresenter";
+import { ViewWithNavigate } from "../../../presenter/ViewInterface";
 
 interface Props {
   originalUrl?: string;
-  generatePresenter: (view: LoginView) => LoginPresenter;
 }
 
 const Login = (props: Props) => {
@@ -30,7 +30,7 @@ const Login = (props: Props) => {
     return !alias || !password;
   };
 
-  const view: LoginView = {
+  const view: ViewWithNavigate = {
     displayErrorMessage: (message: string) => {
       displayErrorMessage(message);
     },
@@ -42,7 +42,7 @@ const Login = (props: Props) => {
     }
   };
 
-  const [presenter] = useState(props.generatePresenter(view));
+  const [presenter] = useState(new LoginPresenter(view, props.originalUrl));
 
   const doLogin = async () => {
     presenter.doLogin(alias, password);

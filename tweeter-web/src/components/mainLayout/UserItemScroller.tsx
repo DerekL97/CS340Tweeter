@@ -7,11 +7,12 @@ import useUserInfoContext from "../userInfo/useUserInfoContext";
 import { ListPresenter, ListView } from "../../presenter/ListPresenter";
 import { FollowersPresenter } from "../../presenter/UserPresenters/FollowersPresenter";
 import ItemScroller from "./Scroller";
+import { FollowService } from "../../model/service/FollowService";
 
 // export const PAGE_SIZE = 10;
 
 interface Props {
-  presenterGenerator: (view: ListView<User>) => ListPresenter<User, FollowersPresenter>;
+  presenterGenerator: (view: ListView<User>) => ListPresenter<User, FollowService>;
 }
 
 const UserItemScroller = (props: Props) => {

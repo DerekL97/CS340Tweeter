@@ -8,13 +8,11 @@ import { Buffer } from "buffer";
 import useToastListener from "../../toaster/ToastListenerHook";
 import AuthenticationFields from "../AuthenticationFields";
 import useUserInfoContext from "../../userInfo/useUserInfoContext";
-import { RegisterPresenter, RegisterView } from "../../../presenter/AuthPresenters/RegisterPresenter";
+import { RegisterPresenter } from "../../../presenter/AuthPresenters/RegisterPresenter";
+import { ViewWithNavigate } from "../../../presenter/ViewInterface";
 
-interface Props {
-  generatePresenter: (view: RegisterView) => RegisterPresenter;
-}
 
-const Register = (props: Props) => {
+const Register = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [alias, setAlias] = useState("");
@@ -30,7 +28,7 @@ const Register = (props: Props) => {
   const { updateUserInfo } = useUserInfoContext();
   const { displayErrorMessage } = useToastListener();
 
-  const view: RegisterView = {
+  const view: ViewWithNavigate = {
     displayErrorMessage: (message: string) => {
       displayErrorMessage(message);
     },
@@ -42,7 +40,7 @@ const Register = (props: Props) => {
     }
   };
 
-  const [presenter] = useState(props.generatePresenter(view));
+  const [presenter] = useState(new RegisterPresenter(view));
 
   const checkSubmitButtonStatus = (): boolean => {
     return !firstName || !lastName || !alias || !password || !imageUrl;
