@@ -12,6 +12,7 @@ import { ViewWithNavigate } from "../../../presenter/ViewInterface";
 
 interface Props {
   originalUrl?: string;
+  presenter?: LoginPresenter;
 }
 
 const Login = (props: Props) => {
@@ -42,7 +43,7 @@ const Login = (props: Props) => {
     }
   };
 
-  const [presenter] = useState(new LoginPresenter(view, props.originalUrl));
+  const [presenter] = useState(props.presenter? props.presenter : new LoginPresenter(view, props.originalUrl));
 
   const doLogin = async () => {
     presenter.doLogin(alias, password);
