@@ -12,6 +12,7 @@
   },
   "scripts": {
     "start": "cd tweeter-web && npm run start",
-    "build": "cd tweeter-web && npm run build && cd ../tweeter-shared && npm run build"
+    "build": "cd tweeter-web && npm run build && cd ../tweeter-shared && npm run build",
+    "test": "cd tweeter-web && npm run test"
   }
 }
